@@ -10,7 +10,6 @@ CREATE TABLE project (
 );
 
 CREATE INDEX idx_project_name ON project(name);
-
 CREATE INDEX idx_project_start_date ON project(start_date);
 
 

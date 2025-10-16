@@ -7,6 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
@@ -28,6 +32,10 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (projectRequest.name().length() < 3) {
             throw new ProjectNameTooShortException();
+        }
+
+        if (projectRepository.existsByName(projectRequest.name())) {
+            throw new ProjectNameDuplicateException();
         }
 
         Project newProject = new Project();
@@ -57,5 +65,75 @@ public class ProjectServiceImpl implements ProjectService {
                 projectsAll.getTotalElements());
 
         return projectsAll.map(projectMapper::toProjectResponse);
+    }
+
+    @Override
+    public ProjectResponse getProjectById(Long id) {
+
+        Project project = projectRepository
+                .findById(id).orElseThrow(ProjectNotFoundException::new);
+
+        log.debug("Retornando projeto com id={}, name={} ", id, project.getName());
+
+        return projectMapper.toProjectResponse(project);
+    }
+
+    @Override
+    public List<ProjectResponse> getProjectsByName(String name) {
+
+        List<Project> projects = projectRepository.searchByName(name);
+
+        if(projects.isEmpty()){
+
+            log.debug("Nenhum Projeto encontrado com esse nome: {} ", name);
+            throw new ProjectNameNotFoundException();
+        }
+
+        return projects.stream().map(projectMapper::toProjectResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ProjectResponse updateProject(Long id, ProjectRequest projectRequestUpdate)
+            throws ProjectNameTooShortException {
+
+        Project existingProject = projectRepository
+                .findById(id).orElseThrow(ProjectNotFoundException::new);
+
+        if (projectRequestUpdate.name() != null) {
+
+            if (projectRequestUpdate.name().length() < 3) {
+                throw new ProjectNameTooShortException();
+            }
+
+            Optional<Project> nameDuplicate = projectRepository.findByName(projectRequestUpdate.name());
+
+            if (nameDuplicate.isPresent() && !nameDuplicate.get().getId().equals(id)) {
+
+                throw new ProjectNameDuplicateException();
+            }
+
+            existingProject.setName(projectRequestUpdate.name());
+        }
+
+        if (projectRequestUpdate.description() != null) {
+            existingProject.setDescription(projectRequestUpdate.description());
+        }
+
+        log.info("Projeto com id={} atualizado com sucesso", id);
+
+        Project updatedProject = projectRepository.save(existingProject);
+
+        return projectMapper.toProjectResponse(updatedProject);
+    }
+
+    @Override
+    public void deleteProject(Long id) {
+
+        Project project = projectRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
+
+        projectRepository.delete(project);
+
+        log.info("Projeto com id={} deletado com sucesso", id);
     }
 }
