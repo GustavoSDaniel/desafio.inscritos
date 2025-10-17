@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5051/db-project-task
-    username: user_gustavo
-    password: senha_gustavo
+    username: gutiuser
+    password: senhadb
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -26,10 +26,11 @@ spring:
 
   springdoc:
     swagger-ui:
-      path: /swagger-ui.html # http://localhost:5055/swagger-ui.html
+      path: /swagger-ui.html # http://localhost:5050/swagger-ui.html
 
   jackson:
     time-zone: America/Sao_Paulo
+
 
 
 

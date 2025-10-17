@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,9 +40,14 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ProjectNameDuplicateException();
         }
 
+        if (projectRequest.endDate() != null && projectRequest.endDate().isBefore(LocalDateTime.now())) {
+            throw new DateEndBeforeStarDateException();
+        }
+
         Project newProject = new Project();
         newProject.setName(projectRequest.name());
         newProject.setDescription(projectRequest.description());
+        newProject.setEndDate(projectRequest.endDate());
 
         Project savedProject = projectRepository.save(newProject);
 
@@ -118,6 +125,15 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (projectRequestUpdate.description() != null) {
             existingProject.setDescription(projectRequestUpdate.description());
+        }
+
+        if (projectRequestUpdate.endDate() != null) {
+
+            if (projectRequestUpdate.endDate().isBefore(LocalDateTime.now())) {
+                throw new DateEndBeforeStarDateException();
+            }
+
+            existingProject.setEndDate(projectRequestUpdate.endDate());
         }
 
         log.info("Projeto com id={} atualizado com sucesso", id);

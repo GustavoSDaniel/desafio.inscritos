@@ -13,7 +13,8 @@ public class ProjectMapper {
         return new ProjectResponse(
                 project.getId(),
                 project.getName(),
-                project.getDescription()
+                project.getDescription(),
+                project.getEndDate()
         );
     }
 }

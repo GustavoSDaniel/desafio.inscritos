@@ -1,9 +1,6 @@
 package dev.matheuslf.desafio.inscritos.exception;
 
-import dev.matheuslf.desafio.inscritos.project.ProjectNameDuplicateException;
-import dev.matheuslf.desafio.inscritos.project.ProjectNameNotFoundException;
-import dev.matheuslf.desafio.inscritos.project.ProjectNameTooShortException;
-import dev.matheuslf.desafio.inscritos.project.ProjectNotFoundException;
+import dev.matheuslf.desafio.inscritos.project.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -96,6 +93,19 @@ public class GlobalExceptionHandle {
                 null);
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorDuplicate);
+    }
+
+    @ExceptionHandler(DateEndBeforeStarDateException.class)
+    public ResponseEntity<ErrorResponse> handleDateEndBeforeStarDateException(
+            DateEndBeforeStarDateException ex){
+        log.warn("Data de término anterior à data de início {}", ex.getMessage());
+
+        ErrorResponse ErrorDate = new ErrorResponse("Data Inválida",
+                "A data de término não pode ser anterior à data de início.",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDate);
     }
 
 }
