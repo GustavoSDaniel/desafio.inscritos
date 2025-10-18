@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
-public record TaskRequest(
+public record TaskRequestWhitProject(
 
         @NotBlank(message = "O titulo é obrigatório")
         @Size(min = 5, max = 150, message = "O título deve ter entre 5 e 150 caracteres")
@@ -16,6 +16,8 @@ public record TaskRequest(
         @NotNull(message = "A prioridade é obrigatório")
         PriorityTask priority,
         @NotNull(message = "A data de termino da task é obrigatória")
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+        @NotNull(message = "O ID do projeto é obrigatório")
+        Long projectId
         ) {
 }

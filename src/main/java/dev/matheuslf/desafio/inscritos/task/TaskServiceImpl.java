@@ -29,7 +29,35 @@ public class TaskServiceImpl implements TaskService{
     @Transactional
     public TaskResponse createTask(TaskRequest taskRequest) throws TaskNameTooShortException {
 
-        log.info("Iniciando criação de task {}", taskRequest);
+        if (taskRequest.title().length() < 5) {
+            throw new TaskNameTooShortException();
+        }
+
+        if (taskRepository.existsByTitle(taskRequest.title())) {
+            throw new TaskNameTooShortException();
+        }
+
+        Task newTask = new Task();
+        newTask.setTitle(taskRequest.title());
+        newTask.setDescription(taskRequest.description());
+        newTask.setStatus(StatusTask.TODO);
+        newTask.setPriority(taskRequest.priority());
+        newTask.setDueDate(taskRequest.dueDate());
+
+        Task salvedTask = taskRepository.save(newTask);
+
+        log.info("Task criada com sucesso {}", salvedTask.getTitle());
+
+        return taskMapper.toTaskResponse(salvedTask);
+
+    }
+
+    @Override
+    @Transactional
+    public TaskResponseWhitProject createTaskInTheProject(TaskRequestWhitProject taskRequest)
+            throws TaskNameTooShortException {
+
+        log.info("Iniciando criação de task {} para o projeto {}", taskRequest, taskRequest.projectId());
 
         if (taskRequest.title().length() < 5) {
             throw new TaskNameTooShortException();
@@ -37,7 +65,7 @@ public class TaskServiceImpl implements TaskService{
 
         if (taskRepository.existsByTitleAndProjectId(taskRequest.title(), taskRequest.projectId())) {
 
-            throw new TaskNameDuplicateException();
+            throw new TaskNameInTheProjectDuplicateException();
         }
 
         if (taskRequest.dueDate().isBefore(LocalDateTime.now())){
@@ -57,9 +85,18 @@ public class TaskServiceImpl implements TaskService{
 
        Task salvedTask = taskRepository.save(newTask);
 
-        log.info("Task criada com sucesso {}", salvedTask.getTitle());
+        log.info("Task do Projeto {} criada com sucesso {}", newTask.getProject(), salvedTask.getTitle());
 
-       return taskMapper.toTaskResponse(salvedTask);
-
+       return taskMapper.toTaskResponseWhitProject(salvedTask);
     }
+
+    @Override
+    public void deleteTask(Long Id ) {
+
+        Task task = taskRepository.findById(Id).orElseThrow(TaskNotFoundException::new);
+
+        taskRepository.delete(task);
+    }
+
+
 }

@@ -2,7 +2,9 @@ package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
 import dev.matheuslf.desafio.inscritos.task.TaskNameDuplicateException;
+import dev.matheuslf.desafio.inscritos.task.TaskNameInTheProjectDuplicateException;
 import dev.matheuslf.desafio.inscritos.task.TaskNameTooShortException;
+import dev.matheuslf.desafio.inscritos.task.TaskNotFoundException;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,12 +111,13 @@ public class GlobalExceptionHandle {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDate);
     }
 
-    @ExceptionHandler(TaskNameDuplicateException.class)
-    public ResponseEntity<ErrorResponse> handleTaskNameDuplicateException(TaskNameDuplicateException ex){
+    @ExceptionHandler(TaskNameInTheProjectDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNameInTheProjectDuplicateException
+            (TaskNameInTheProjectDuplicateException ex){
 
-        log.warn("Task com esse nome já existe {}", ex.getMessage());
+        log.warn("Task com esse nome no projeto já existe {}", ex.getMessage());
 
-        ErrorResponse ErrorDuplicate = new ErrorResponse("Nome já em uso",
+        ErrorResponse ErrorDuplicate = new ErrorResponse("Nome já em uso nesse projeto",
                 "Já existe uma task com esse titulo, nesse projeto",
                 LocalDateTime.now(),
                 null);
@@ -137,7 +140,31 @@ public class GlobalExceptionHandle {
     }
 
 
+    @ExceptionHandler(TaskNameDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNameDuplicateException(TaskNameDuplicateException ex){
 
+        log.warn("Task com esse nome já existe {}", ex.getMessage());
+
+        ErrorResponse ErrorDuplicate = new ErrorResponse("Nome já em uso",
+                "Já existe uma task com esse titulo",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorDuplicate);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException ex){
+
+        log.warn("Task não encontrado {}", ex.getMessage());
+
+        ErrorResponse ErrorNotFound = new ErrorResponse("Task não encontrado",
+                "A task com o ID informado não foi encontrado.",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorNotFound);
+    }
 
 
 }

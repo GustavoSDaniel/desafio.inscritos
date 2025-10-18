@@ -3,13 +3,14 @@ package dev.matheuslf.desafio.inscritos.task;
 
 import java.time.LocalDateTime;
 
-public record TaskResponse(
+public record TaskResponseWhitProject(
 
         Long id,
         String title,
         String description,
         StatusTask status,
         PriorityTask priority,
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+        String projectName
 ) {
 }
