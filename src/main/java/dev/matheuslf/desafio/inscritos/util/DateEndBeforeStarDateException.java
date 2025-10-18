@@ -1,4 +1,4 @@
-package dev.matheuslf.desafio.inscritos.project;
+package dev.matheuslf.desafio.inscritos.util;
 
 import dev.matheuslf.desafio.inscritos.exception.BaseExceptionRunTime;
 

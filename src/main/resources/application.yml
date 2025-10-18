@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5051/db-project-task
-    username: gutiuser
-    password: senhadb
+    username: user_gustavo
+    password: senha_gustavo
     driver-class-name: org.postgresql.Driver
 
   jpa:

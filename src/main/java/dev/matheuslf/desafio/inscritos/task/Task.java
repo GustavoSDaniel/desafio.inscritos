@@ -14,6 +14,19 @@ import java.util.Objects;
 @EntityListeners(TaskListener.class)
 public class Task {
 
+    public Task(){
+
+    }
+
+    public Task(String title, String description, StatusTask status, PriorityTask priority, LocalDateTime dueDate, Project project) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.project = project;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -26,7 +39,7 @@ public class Task {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private StatusTask status;
+    private StatusTask status = StatusTask.TODO;
 
     @Enumerated(EnumType.STRING)
     private PriorityTask priority;
@@ -44,7 +57,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
-    private Project projectId;
+    private Project project;
 
     public Long getId() {
         return id;
@@ -102,12 +115,12 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public Project getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(Project projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override

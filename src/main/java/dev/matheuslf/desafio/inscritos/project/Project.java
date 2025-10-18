@@ -44,7 +44,7 @@ public class Project {
 
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "projectId", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Task> tasks;
 

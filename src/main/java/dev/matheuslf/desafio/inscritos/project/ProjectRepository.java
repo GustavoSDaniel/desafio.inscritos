@@ -19,4 +19,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
         Boolean existsByName(String name);
 
+        boolean id(Long id);
 }

@@ -1,6 +1,9 @@
 package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
+import dev.matheuslf.desafio.inscritos.task.TaskNameDuplicateException;
+import dev.matheuslf.desafio.inscritos.task.TaskNameTooShortException;
+import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,8 +40,6 @@ public class GlobalExceptionHandle {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erros);
     }
-
-
 
     @ExceptionHandler(ProjectNameTooShortException.class)
     public ResponseEntity<ErrorResponse> handleProjectNameTooShortException(
@@ -87,7 +88,7 @@ public class GlobalExceptionHandle {
             ProjectNameDuplicateException ex){
         log.warn("Projeto com esse nome já existe {}", ex.getMessage());
 
-        ErrorResponse ErrorDuplicate = new ErrorResponse("NOme já em Uso",
+        ErrorResponse ErrorDuplicate = new ErrorResponse("Nome já em Uso",
                 "Já existe um projeto com esse nome.",
                 LocalDateTime.now(),
                 null);
@@ -107,5 +108,36 @@ public class GlobalExceptionHandle {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDate);
     }
+
+    @ExceptionHandler(TaskNameDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNameDuplicateException(TaskNameDuplicateException ex){
+
+        log.warn("Task com esse nome já existe {}", ex.getMessage());
+
+        ErrorResponse ErrorDuplicate = new ErrorResponse("Nome já em uso",
+                "Já existe uma task com esse titulo, nesse projeto",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorDuplicate);
+    }
+
+    @ExceptionHandler(TaskNameTooShortException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNameTooShortException(
+            TaskNameTooShortException ex){
+
+        log.warn("Nome da task muito curto {}", ex.getMessage());
+
+        ErrorResponse ErrorNameShort = new ErrorResponse("Nome muito curto",
+                "Task name must be at least 5 characters long. Provided",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorNameShort);
+    }
+
+
+
+
 
 }
