@@ -1,10 +1,7 @@
 package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
-import dev.matheuslf.desafio.inscritos.task.TaskNameDuplicateException;
-import dev.matheuslf.desafio.inscritos.task.TaskNameInTheProjectDuplicateException;
-import dev.matheuslf.desafio.inscritos.task.TaskNameTooShortException;
-import dev.matheuslf.desafio.inscritos.task.TaskNotFoundException;
+import dev.matheuslf.desafio.inscritos.task.*;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +161,19 @@ public class GlobalExceptionHandle {
                 null);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorNotFound);
+    }
+
+    @ExceptionHandler(TaskStatusDoneException.class)
+    public ResponseEntity<ErrorResponse> handleTaskStatusDoneException(TaskStatusDoneException ex){
+
+        log.warn("Não é possivel atualizar uma tesk já finalizada");
+
+        ErrorResponse ErrorTaskDone = new ErrorResponse("Task já finalizada",
+                "Não é possível alterar uma task que já foi concluída",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorTaskDone);
     }
 
 

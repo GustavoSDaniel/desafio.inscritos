@@ -27,34 +27,7 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     @Transactional
-    public TaskResponse createTask(TaskRequest taskRequest) throws TaskNameTooShortException {
-
-        if (taskRequest.title().length() < 5) {
-            throw new TaskNameTooShortException();
-        }
-
-        if (taskRepository.existsByTitle(taskRequest.title())) {
-            throw new TaskNameTooShortException();
-        }
-
-        Task newTask = new Task();
-        newTask.setTitle(taskRequest.title());
-        newTask.setDescription(taskRequest.description());
-        newTask.setStatus(StatusTask.TODO);
-        newTask.setPriority(taskRequest.priority());
-        newTask.setDueDate(taskRequest.dueDate());
-
-        Task salvedTask = taskRepository.save(newTask);
-
-        log.info("Task criada com sucesso {}", salvedTask.getTitle());
-
-        return taskMapper.toTaskResponse(salvedTask);
-
-    }
-
-    @Override
-    @Transactional
-    public TaskResponseWhitProject createTaskInTheProject(TaskRequestWhitProject taskRequest)
+    public TaskResponse createTask(TaskRequest taskRequest)
             throws TaskNameTooShortException {
 
         log.info("Iniciando criação de task {} para o projeto {}", taskRequest, taskRequest.projectId());
@@ -87,8 +60,33 @@ public class TaskServiceImpl implements TaskService{
 
         log.info("Task do Projeto {} criada com sucesso {}", newTask.getProject(), salvedTask.getTitle());
 
-       return taskMapper.toTaskResponseWhitProject(salvedTask);
+       return taskMapper.toTaskResponse(salvedTask);
     }
+
+    @Override
+    @Transactional
+    public TaskResponse updateTask(Long id, RequestUpdate taskRequestUpdate) {
+
+        log.info("Atualizando status da task ID: {}", id);
+
+        Task taskExist = taskRepository.findById(id)
+                .orElseThrow(TaskNotFoundException::new);
+
+        if (taskExist.getStatus() == StatusTask.DONE) {
+
+            throw new TaskStatusDoneException();
+        }
+
+        taskExist.setStatus(taskRequestUpdate.statusTask());
+
+        Task taskUpdated = taskRepository.save(taskExist);
+
+        log.info("Task com o Id: {} atualizado com sucesso para o status de {}",
+                taskUpdated.getId(), taskUpdated.getStatus());
+
+        return taskMapper.toTaskResponse(taskUpdated);
+    }
+
 
     @Override
     public void deleteTask(Long Id ) {

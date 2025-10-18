@@ -10,6 +10,7 @@ public record TaskResponse(
         String description,
         StatusTask status,
         PriorityTask priority,
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+        String projectName
 ) {
 }

@@ -16,6 +16,8 @@ public record TaskRequest(
         @NotNull(message = "A prioridade é obrigatório")
         PriorityTask priority,
         @NotNull(message = "A data de termino da task é obrigatória")
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+        @NotNull(message = "O ID do projeto é obrigatório")
+        Long projectId
         ) {
 }
