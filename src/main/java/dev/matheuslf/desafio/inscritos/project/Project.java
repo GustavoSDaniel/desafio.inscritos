@@ -1,5 +1,6 @@
 package dev.matheuslf.desafio.inscritos.project;
 
+import dev.matheuslf.desafio.inscritos.task.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
@@ -7,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -41,6 +43,10 @@ public class Project {
     private LocalDateTime updateAt;
 
     private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "projectId", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Task> tasks;
 
     public Long getId() {
         return id;
@@ -85,12 +91,15 @@ public class Project {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
+
         Project project = (Project) o;
-        return Objects.equals(id, project.id);
+        return Objects.equals(id, project.id) && Objects.equals(startDate, project.startDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(startDate);
+        return result;
     }
 }
