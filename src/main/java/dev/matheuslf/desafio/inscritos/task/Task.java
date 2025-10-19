@@ -1,17 +1,17 @@
 package dev.matheuslf.desafio.inscritos.task;
 
-import com.sun.source.util.TaskListener;
 import dev.matheuslf.desafio.inscritos.project.Project;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@EntityListeners(TaskListener.class)
+@EntityListeners(AuditingEntityListener.class)
 public class Task {
 
     public Task(){

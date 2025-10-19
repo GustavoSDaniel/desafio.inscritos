@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     @Transactional
-    public TaskResponse updateTask(Long id, RequestUpdate taskRequestUpdate) {
+    public TaskResponse updateTask(Long id, TaskRequestUpdate taskRequestUpdate) {
 
         log.info("Atualizando status da task ID: {}", id);
 

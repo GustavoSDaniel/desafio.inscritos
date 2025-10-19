@@ -5,7 +5,7 @@ public interface TaskService {
     TaskResponse createTask(TaskRequest taskRequest)
             throws TaskNameTooShortException;
 
-    TaskResponse updateTask(Long id, RequestUpdate taskRequestUpdate);
+    TaskResponse updateTask(Long id, TaskRequestUpdate taskRequestUpdate);
 
     void deleteTask(Long Id);
 
