@@ -68,8 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
             return Page.empty(pageable);
         }
 
-        log.debug("Retornando todos os projetos {} no total de {} ", projectsAll.getNumberOfElements(),
-                projectsAll.getTotalElements());
+        log.debug("Retornando todos os projetos no total de {} ", projectsAll.getTotalElements());
 
         return projectsAll.map(projectMapper::toProjectResponse);
     }

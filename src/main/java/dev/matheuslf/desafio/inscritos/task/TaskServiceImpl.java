@@ -7,9 +7,13 @@ import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService{
@@ -61,6 +65,62 @@ public class TaskServiceImpl implements TaskService{
         log.info("Task do Projeto {} criada com sucesso {}", newTask.getProject(), salvedTask.getTitle());
 
        return taskMapper.toTaskResponse(salvedTask);
+    }
+
+    @Override
+    public Page<TaskResponse> getAllTask(Pageable pageable) {
+
+        Page<Task> allTask = taskRepository.findAll(pageable);
+
+        if (allTask.isEmpty()) {
+            log.debug("Nenhuma Task encontrada");
+
+            return Page.empty(pageable);
+        }
+
+        log.debug("Retornando todas as tasks no total de {} ",allTask.getTotalElements());
+
+        return allTask.map(taskMapper::toTaskResponse);
+    }
+
+    @Override
+    public TaskResponse getTaskById(Long id) {
+
+        log.debug("Buscando tak por ID {} ", id);
+
+        Task task = taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
+
+        log.debug("Task encontrada com sucesso ID  {} ", id);
+        return taskMapper.toTaskResponse(task);
+
+    }
+
+    @Override
+    public List<TaskResponse> searchByTaskTitle(String title) {
+
+        List<Task> tasksName = taskRepository.findByTitle(title);
+
+        if (tasksName.isEmpty()) {
+            log.debug("Nenhuma Task encontrada com esse título: {} ", title);
+            return List.of();
+        }
+
+        return tasksName.stream().map(taskMapper::toTaskResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskResponse> findTaskByProjectId(Long idProject) {
+
+        List<Task> tasksProject = taskRepository.findByProjectId(idProject);
+
+        if (tasksProject.isEmpty()) {
+            log.debug("Nenhuma Task encontrada para o projeto ID: {} ", idProject);
+            return List.of();
+        }
+
+        return  tasksProject.stream().map(taskMapper::toTaskResponse).collect(Collectors.toList());
+
+
     }
 
     @Override
