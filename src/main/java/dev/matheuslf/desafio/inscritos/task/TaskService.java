@@ -15,9 +15,8 @@ public interface TaskService {
 
     TaskResponse getTaskById(Long id);
 
-    List<TaskResponse> searchByTaskTitle(String title);
-
-    List<TaskResponse> findTaskByProjectId(Long idProject);
+    Page<TaskResponse> findTasksWithFilters(
+            String title, Long projectId, StatusTask status, PriorityTask priority, Pageable pageable);
 
     TaskResponse updateTask(Long id, TaskRequestUpdate taskRequestUpdate);
 

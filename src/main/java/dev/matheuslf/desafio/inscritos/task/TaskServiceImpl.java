@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -96,32 +97,17 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public List<TaskResponse> searchByTaskTitle(String title) {
+    public Page<TaskResponse> findTasksWithFilters(
+            String title, Long projectId, StatusTask status, PriorityTask priority, Pageable pageable) {
 
-        List<Task> tasksName = taskRepository.findByTitle(title);
+        Specification<Task> specification = TaskSpecification.filters(title, projectId, status, priority);
 
-        if (tasksName.isEmpty()) {
-            log.debug("Nenhuma Task encontrada com esse título: {} ", title);
-            return List.of();
-        }
+        Page<Task> tasks = taskRepository.findAll(specification, pageable);
 
-        return tasksName.stream().map(taskMapper::toTaskResponse).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TaskResponse> findTaskByProjectId(Long idProject) {
-
-        List<Task> tasksProject = taskRepository.findByProjectId(idProject);
-
-        if (tasksProject.isEmpty()) {
-            log.debug("Nenhuma Task encontrada para o projeto ID: {} ", idProject);
-            return List.of();
-        }
-
-        return  tasksProject.stream().map(taskMapper::toTaskResponse).collect(Collectors.toList());
-
+        return tasks.map(taskMapper::toTaskResponse);
 
     }
+
 
     @Override
     @Transactional
