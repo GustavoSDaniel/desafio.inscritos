@@ -41,7 +41,7 @@ public class TaskController {
     @Operation(summary = "Mostrar todas as tasks")
     public ResponseEntity<Page<TaskResponse>> findAllTasks(
             @ParameterObject
-            @PageableDefault(size = 20, sort = "startDate", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable) {
 
         Page<TaskResponse> allTasks = taskService.getAllTask(pageable);
@@ -56,6 +56,23 @@ public class TaskController {
         TaskResponse task = taskService.getTaskById(id);
 
         return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Filtro de buscas, com titulo, ID do projeto, status e prioridade")
+    public ResponseEntity<Page<TaskResponse>> findTasksByFilters(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) StatusTask status,
+            @RequestParam(required = false) PriorityTask priority,
+            @ParameterObject
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable){
+
+        Page<TaskResponse> tasks = taskService
+                .findTasksWithFilters(title, projectId, status, priority, pageable);
+
+        return ResponseEntity.ok(tasks);
     }
 
     @PutMapping("/{id}")

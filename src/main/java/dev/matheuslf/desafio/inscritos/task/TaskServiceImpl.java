@@ -100,6 +100,9 @@ public class TaskServiceImpl implements TaskService{
     public Page<TaskResponse> findTasksWithFilters(
             String title, Long projectId, StatusTask status, PriorityTask priority, Pageable pageable) {
 
+        log.debug("Buscando tarefas com filtros: title {}, projectId {}, status {}, priority {}",
+                title, projectId, status, priority);
+
         Specification<Task> specification = TaskSpecification.filters(title, projectId, status, priority);
 
         Page<Task> tasks = taskRepository.findAll(specification, pageable);
