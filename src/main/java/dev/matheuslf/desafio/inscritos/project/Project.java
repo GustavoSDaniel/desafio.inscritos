@@ -1,6 +1,7 @@
 package dev.matheuslf.desafio.inscritos.project;
 
 import dev.matheuslf.desafio.inscritos.task.Task;
+import dev.matheuslf.desafio.inscritos.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
@@ -44,6 +45,10 @@ public class Project {
 
     private LocalDateTime endDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Task> tasks;
@@ -86,6 +91,22 @@ public class Project {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override

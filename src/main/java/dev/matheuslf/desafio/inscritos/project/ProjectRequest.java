@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record ProjectRequest(
 
@@ -11,6 +12,7 @@ public record ProjectRequest(
         @Size(min = 3, max = 100)
         String name,
         String description,
-        LocalDateTime endDate
+        LocalDateTime endDate,
+        UUID userId
 ) {
 }

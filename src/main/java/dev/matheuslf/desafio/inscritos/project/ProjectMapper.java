@@ -14,7 +14,8 @@ public class ProjectMapper {
                 project.getId(),
                 project.getName(),
                 project.getDescription(),
-                project.getEndDate()
+                project.getEndDate(),
+                project.getUser() != null ? project.getUser().getUserName() : null
         );
     }
 }

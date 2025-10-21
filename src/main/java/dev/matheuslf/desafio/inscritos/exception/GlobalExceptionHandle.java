@@ -2,6 +2,7 @@ package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
 import dev.matheuslf.desafio.inscritos.task.*;
+import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,6 +175,18 @@ public class GlobalExceptionHandle {
                 null);
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorTaskDone);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex){
+        log.warn("Usuario com esse ID não foi encontrado");
+
+        ErrorResponse ErrorNotFound = new ErrorResponse("Usuario não encontrado",
+                "Usuario com o ID informado não existe",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorNotFound);
     }
 
 

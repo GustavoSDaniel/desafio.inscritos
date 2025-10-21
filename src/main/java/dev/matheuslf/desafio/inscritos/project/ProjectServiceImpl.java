@@ -1,5 +1,8 @@
 package dev.matheuslf.desafio.inscritos.project;
 
+import dev.matheuslf.desafio.inscritos.user.User;
+import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
+import dev.matheuslf.desafio.inscritos.user.UserRepository;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -18,11 +21,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final UserRepository userRepository;
     private final static Logger log = LoggerFactory.getLogger(ProjectServiceImpl.class);
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -44,10 +49,14 @@ public class ProjectServiceImpl implements ProjectService {
             throw new DateEndBeforeStarDateException();
         }
 
+        User user = userRepository.findById(projectRequest.userId())
+                .orElseThrow(UserNotFoundException::new);
+
         Project newProject = new Project();
         newProject.setName(projectRequest.name());
         newProject.setDescription(projectRequest.description());
         newProject.setEndDate(projectRequest.endDate());
+        newProject.setUser(user);
 
         Project savedProject = projectRepository.save(newProject);
 
