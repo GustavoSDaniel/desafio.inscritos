@@ -2,6 +2,8 @@ package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
 import dev.matheuslf.desafio.inscritos.task.*;
+import dev.matheuslf.desafio.inscritos.user.UserEmailDuplicateException;
+import dev.matheuslf.desafio.inscritos.user.UserNameTooShortException;
 import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import org.slf4j.Logger;
@@ -187,6 +189,34 @@ public class GlobalExceptionHandle {
                 null);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorNotFound);
+    }
+
+    @ExceptionHandler(UserEmailDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleUserEmailDuplicateException
+            (UserEmailDuplicateException ex){
+
+        log.warn("Já existe um usuario com esse email {}", ex.getMessage());
+
+        ErrorResponse ErrorDuplicate = new ErrorResponse("Email já em uso",
+                "Já existe um usuario com esse email",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorDuplicate);
+    }
+
+    @ExceptionHandler(UserNameTooShortException.class)
+    public ResponseEntity<ErrorResponse> handleUserNameTooShortException(
+            UserNameTooShortException ex){
+
+        log.warn("Nome do usuario muito curto {}", ex.getMessage());
+
+        ErrorResponse ErrorNameShort = new ErrorResponse("Nome muito curto",
+                "User name must be at least 4 characters long. Provided",
+                LocalDateTime.now(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorNameShort);
     }
 
 

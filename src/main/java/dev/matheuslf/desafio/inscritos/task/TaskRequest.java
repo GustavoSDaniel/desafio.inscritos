@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record TaskRequest(
 
@@ -17,6 +18,8 @@ public record TaskRequest(
         PriorityTask priority,
         @NotNull(message = "A data de termino da task é obrigatória")
         LocalDateTime dueDate,
+        @NotNull(message = "O ID do usuario é obrigatório")
+        UUID idUser,
         @NotNull(message = "O ID do projeto é obrigatório")
         Long projectId
         ) {

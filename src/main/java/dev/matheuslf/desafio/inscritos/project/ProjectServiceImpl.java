@@ -1,8 +1,6 @@
 package dev.matheuslf.desafio.inscritos.project;
 
-import dev.matheuslf.desafio.inscritos.user.User;
-import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
-import dev.matheuslf.desafio.inscritos.user.UserRepository;
+import dev.matheuslf.desafio.inscritos.user.*;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository
                 .findById(id).orElseThrow(ProjectNotFoundException::new);
 
-        log.debug("Retornando projeto com id={}, name={} ", id, project.getName());
+        log.debug("Retornando projeto com id {}, name {} ", id, project.getName());
 
         return projectMapper.toProjectResponse(project);
     }
@@ -144,7 +143,7 @@ public class ProjectServiceImpl implements ProjectService {
             existingProject.setEndDate(projectRequestUpdate.endDate());
         }
 
-        log.info("Projeto com id={} atualizado com sucesso", id);
+        log.info("Projeto com id {} atualizado com sucesso", id);
 
         Project updatedProject = projectRepository.save(existingProject);
 

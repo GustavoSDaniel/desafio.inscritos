@@ -20,6 +20,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
+  jwt:
+    secret: ${JWT_SECRET}
+
   flyway:
     enabled: true
     locations: classpath:db/migration

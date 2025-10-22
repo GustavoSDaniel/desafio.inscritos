@@ -3,6 +3,9 @@ package dev.matheuslf.desafio.inscritos.task;
 import dev.matheuslf.desafio.inscritos.project.Project;
 import dev.matheuslf.desafio.inscritos.project.ProjectNotFoundException;
 import dev.matheuslf.desafio.inscritos.project.ProjectRepository;
+import dev.matheuslf.desafio.inscritos.user.User;
+import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
+import dev.matheuslf.desafio.inscritos.user.UserRepository;
 import dev.matheuslf.desafio.inscritos.util.DateEndBeforeStarDateException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -22,12 +25,14 @@ public class TaskServiceImpl implements TaskService{
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final TaskMapper taskMapper;
+    private final UserRepository userRepository;
     private final static Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, ProjectRepository projectRepository, TaskMapper taskMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, ProjectRepository projectRepository, TaskMapper taskMapper, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.taskMapper = taskMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -50,6 +55,9 @@ public class TaskServiceImpl implements TaskService{
             throw new DateEndBeforeStarDateException();
         }
 
+        User user = userRepository.findById(taskRequest.idUser())
+                .orElseThrow(UserNotFoundException::new);
+
         Project project = projectRepository.findById(taskRequest.projectId())
                 .orElseThrow(ProjectNotFoundException::new);
 
@@ -59,6 +67,7 @@ public class TaskServiceImpl implements TaskService{
        newTask.setStatus(StatusTask.TODO);
        newTask.setPriority(taskRequest.priority());
        newTask.setDueDate(taskRequest.dueDate());
+       newTask.setUser(user);
        newTask.setProject(project);
 
        Task salvedTask = taskRepository.save(newTask);
