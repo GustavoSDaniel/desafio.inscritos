@@ -6,10 +6,14 @@ CREATE TABLE project (
                          description VARCHAR(255),
                          start_date TIMESTAMP NOT NULL,
                          update_at TIMESTAMP,
-                         end_date TIMESTAMP
+                         end_date TIMESTAMP,
+                         user_id UUID NOT NULL,
+
+CONSTRAINT fk_projects_on_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE INDEX idx_project_name ON project(name);
+CREATE INDEX idx_projects_on_name ON project(name);
+CREATE INDEX idx_projects_on_user_id ON project(user_id);
 
 
 

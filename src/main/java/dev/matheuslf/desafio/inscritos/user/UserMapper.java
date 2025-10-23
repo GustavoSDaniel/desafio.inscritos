@@ -13,7 +13,7 @@ public class UserMapper {
         return new UserRegisterResponse(
                 user.getId(),
                 user.getEmail(),
-                user.getUsername()
+                user.getUserName()
         );
     }
 }

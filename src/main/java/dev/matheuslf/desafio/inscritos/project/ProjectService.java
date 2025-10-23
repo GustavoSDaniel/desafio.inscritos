@@ -17,7 +17,7 @@ public interface ProjectService {
 
     List<ProjectResponse> getProjectsByName(String name);
 
-    ProjectResponse updateProject(Long id, ProjectRequest project) throws ProjectNameTooShortException;
+    ProjectResponse updateProject(Long id, ProjectRequestUpdate project) throws ProjectNameTooShortException;
 
     void deleteProject(Long id);
 }

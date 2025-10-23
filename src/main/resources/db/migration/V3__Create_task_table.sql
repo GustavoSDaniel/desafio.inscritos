@@ -10,13 +10,12 @@ CREATE TABLE task (
                        updated_at          TIMESTAMP,
                        due_date            TIMESTAMP NOT NULL,
                        project_id          BIGINT NOT NULL,
+                       user_id UUID NOT NULL,
 
-                       CONSTRAINT fk_tasks_project
-                           FOREIGN KEY (project_id)
-                               REFERENCES project(id)
-                               ON DELETE CASCADE
+CONSTRAINT fk_tasks_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
+CONSTRAINT fk_tasks_on_user FOREIGN KEY (user_id) REFERENCES users(id)
+
 );
 
-CREATE INDEX idx_tasks_project_id ON task(project_id);
-CREATE INDEX idx_tasks_status ON task(status);
-CREATE INDEX idx_tasks_priority ON task(priority);
+CREATE INDEX idx_tasks_on_project_id ON task(project_id);
+CREATE INDEX idx_tasks_on_user_id ON task(user_id);

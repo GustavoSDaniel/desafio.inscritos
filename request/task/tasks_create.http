@@ -1,0 +1,13 @@
+### Criar nova Task (somente MANAGER)
+POST http://localhost:5050/api/v1/tasks
+Content-Type: application/json
+Authorization: Bearer <SEU_TOKEN_AQUI>
+
+{
+  "title": "Desenvolver a tela de login",
+  "description": "Criar a interface de usuário e a lógica de autenticação para a tela de login, conforme o protótipo no Figma.",
+  "priority": "HIGH",
+  "dueDate": "2025-11-15T18:00:00",
+  "idUser": "123e4567-e89b-12d3-a456-426614174000",
+  "projectId": 1
+}

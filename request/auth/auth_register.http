@@ -1,0 +1,11 @@
+### Criar usuário via API
+POST http://localhost:5050/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "userName": "gustavo_dev4",
+  "email": "teste4@example.com",
+  "password": "senhaForte123"
+}
+
+

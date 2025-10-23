@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "update_at", insertable = false)
+    @Column(name = "updated_at", insertable = false)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = false)

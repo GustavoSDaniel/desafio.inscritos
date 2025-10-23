@@ -73,7 +73,7 @@ public class ProjectController {
     @Operation(summary = "Atualiza Projeto por Id")
     public ResponseEntity<ProjectResponse> updateProject(
             @PathVariable Long id,
-            @RequestBody @Valid ProjectRequest projectRequestUpdate
+            @RequestBody @Valid ProjectRequestUpdate projectRequestUpdate
     ) throws ProjectNameTooShortException {
 
         ProjectResponse updatedProject = projectService.updateProject(id, projectRequestUpdate);

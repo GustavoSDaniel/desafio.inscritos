@@ -108,7 +108,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectResponse updateProject(Long id, ProjectRequest projectRequestUpdate)
+    public ProjectResponse updateProject(Long id, ProjectRequestUpdate projectRequestUpdate)
             throws ProjectNameTooShortException {
 
         Project existingProject = projectRepository

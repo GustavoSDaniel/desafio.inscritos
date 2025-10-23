@@ -1,0 +1,8 @@
+### Atualizar task por ID
+PUT http://localhost:5050/api/v1/tasks/ID
+Content-Type: application/json
+Authorization: Bearer <SEU_TOKEN_AQUI>
+
+{
+  "status": "TODO, DOING, DONE"
+}

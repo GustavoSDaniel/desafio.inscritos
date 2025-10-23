@@ -1,0 +1,3 @@
+### Deletar projeto por ID (somente MANAGER)
+DELETE http://localhost:5050/api/v1/projects/ID
+Authorization: Bearer <SEU_TOKEN_AQUI>
