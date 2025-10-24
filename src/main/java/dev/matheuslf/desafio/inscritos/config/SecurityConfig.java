@@ -44,14 +44,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers(PUBLIC_WHITELIST).permitAll()
+
                         .requestMatchers(HttpMethod.POST,"/api/v1/projects/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PUT,"/api/v1/projects/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/projects/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/projects/**").hasAnyRole("MANAGER", "EMPLOYEE")
+
                         .requestMatchers(HttpMethod.POST,"/api/v1/tasks/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/tasks/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/tasks/**").hasAnyRole("MANAGER", "EMPLOYEE")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/tasks/**").hasAnyRole("MANAGER", "EMPLOYEE")
+
+                        .requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
+                        .requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
