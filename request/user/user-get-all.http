@@ -1,0 +1,4 @@
+### GET - Listar todos os usuários
+GET http://localhost:5050/api/v1/users
+Authorization: Bearer <SEU_TOKEN_AQUI>
+Accept: application/json

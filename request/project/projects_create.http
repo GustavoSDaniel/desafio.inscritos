@@ -7,5 +7,5 @@ Authorization: Bearer <SEU_TOKEN_AQUI>
   "name": "Lançamento do Novo App Mobile",
   "description": "Desenvolver e lançar a versão 1.0 do aplicativo para Android e iOS, incluindo as funcionalidades de login, dashboard e perfil de usuário.",
   "endDate": "2026-03-31T23:59:00",
-  "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  "userId": "517ef074-d09c-4138-81f6-b1f4636a570a"
 }

@@ -157,6 +157,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.delete(project);
 
-        log.info("Projeto com id={} deletado com sucesso", id);
+        log.info("Projeto com id {} deletado com sucesso", id);
     }
 }

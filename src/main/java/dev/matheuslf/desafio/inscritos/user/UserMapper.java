@@ -16,4 +16,17 @@ public class UserMapper {
                 user.getUserName()
         );
     }
+
+    public UserResponse toUserResponse(User user){
+        if(user == null){
+            return null;
+        }
+
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getUserName(),
+                user.getRole()
+        );
+    }
 }

@@ -25,6 +25,15 @@ public class SecurityConfig {
         this.securityFilter = securityFilter;
     }
 
+    public static final String[] PUBLIC_WHITELIST = {
+            "/api/v1/auth/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -34,8 +43,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(PUBLIC_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/projects/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PUT,"/api/v1/projects/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/projects/**").hasRole("MANAGER")
