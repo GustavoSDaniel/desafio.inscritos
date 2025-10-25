@@ -24,7 +24,7 @@ spring:
     secret: ${JWT_SECRET}
 
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/migration
 
   springdoc:
