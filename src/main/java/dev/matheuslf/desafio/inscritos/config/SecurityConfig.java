@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
                         .requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").hasAnyRole("MANAGER", "EMPLOYEE")
+                        .requestMatchers(HttpMethod.PATCH,"/api/v1/users/*/role").hasRole("MANAGER")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

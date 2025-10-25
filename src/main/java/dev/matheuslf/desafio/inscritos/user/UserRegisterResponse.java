@@ -6,7 +6,8 @@ public record UserRegisterResponse(
 
         UUID id,
         String email,
-        String userName
+        String userName,
+        UserRole role
 
 ) {
 }

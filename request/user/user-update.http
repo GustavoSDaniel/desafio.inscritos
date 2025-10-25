@@ -1,5 +1,5 @@
 ### PUT - Atualizar dados de um usuário
-PUT http://localhost:5050/api/v1/users/{{USER_ID}}
+PUT http://localhost:5050/api/v1/users/id
 Content-Type: application/json
 Authorization: Bearer <SEU_TOKEN_AQUI>
 

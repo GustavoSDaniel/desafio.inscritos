@@ -13,7 +13,8 @@ public class UserMapper {
         return new UserRegisterResponse(
                 user.getId(),
                 user.getEmail(),
-                user.getUserName()
+                user.getUserName(),
+                user.getRole()
         );
     }
 

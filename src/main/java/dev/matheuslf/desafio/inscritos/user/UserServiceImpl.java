@@ -144,6 +144,29 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userSalved);
     }
 
+    @Transactional
+    @Override
+    public UserResponse updateUserRole(UUID id, UserRequestUpdateRole userRequestUpdateRole) {
+
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        if (user.getRole().equals(userRequestUpdateRole.role()) ) {
+
+            log.info("A Role informada já é a role do usuário {}", user.getRole());
+
+            return  userMapper.toUserResponse(user);
+        }
+
+        user.setRole(userRequestUpdateRole.role());
+
+        User userSalved = userRepository.save(user);
+
+        log.info("Role do usuário atualizado com sucesso {}", user.getRole());
+
+        return userMapper.toUserResponse(userSalved);
+    }
+
+
     @Override
     public void deleteUser(UUID id) {
 

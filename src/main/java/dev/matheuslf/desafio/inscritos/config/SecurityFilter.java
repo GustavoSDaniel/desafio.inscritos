@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,11 +25,10 @@ import java.util.Optional;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenConfig tokenConfig;
-    private final UserDetailsService userDetailsService;
 
-    public SecurityFilter(TokenConfig tokenConfig, UserDetailsService userDetailsService) {
+    public SecurityFilter(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;
-        this.userDetailsService = userDetailsService;
+
     }
 
     @Override
@@ -57,11 +58,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (optionalUser.isPresent()) {
                 JWTUserData jwtUserData = optionalUser.get();
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUserData.email());
+                List<SimpleGrantedAuthority> authorities = List.of(
+                        new SimpleGrantedAuthority("ROLE_" + jwtUserData.role())
+                );
 
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
+                                jwtUserData, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

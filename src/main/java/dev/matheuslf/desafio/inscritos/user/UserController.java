@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,11 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final UserAuthorizationServiceRole userAuthorizationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserAuthorizationServiceRole userAuthorizationService) {
         this.userService = userService;
+        this.userAuthorizationService = userAuthorizationService;
     }
 
     @GetMapping()
@@ -66,7 +69,10 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizando Usuário")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,
-                                                   @RequestBody @Valid UserRequestUpdate userUpdate) {
+                                                   @RequestBody @Valid UserRequestUpdate userUpdate,
+                                                   Authentication authentication) {
+
+        userAuthorizationService.validateRoleUser(id, authentication);
 
         UserResponse user = userService.updateUser(id, userUpdate);
 
@@ -74,9 +80,22 @@ public class UserController {
 
     }
 
+    @PatchMapping("/{id}/role")
+    @Operation(summary = "Atualiza a role do usuário")
+    public ResponseEntity<UserResponse> updateUserRole(
+            @PathVariable UUID id,
+            @RequestBody @Valid UserRequestUpdateRole updateRole){
+
+        UserResponse user = userService.updateUserRole(id, updateRole);
+
+        return ResponseEntity.ok(user);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletando usuario")
-    ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+    ResponseEntity<Void> deleteUser(@PathVariable UUID id, Authentication authentication) {
+
+        userAuthorizationService.validateRoleUser(id, authentication);
 
         userService.deleteUser(id);
 

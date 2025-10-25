@@ -1,4 +1,4 @@
 ### GET - Buscar usuário por ID
-GET http://localhost:5050/api/v1/users/{{USER_ID}}
+GET http://localhost:5050/api/v1/users/id
 Authorization: Bearer <SEU_TOKEN_AQUI>
 Accept: application/json

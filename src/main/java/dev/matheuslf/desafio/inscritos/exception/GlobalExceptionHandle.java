@@ -2,6 +2,7 @@ package dev.matheuslf.desafio.inscritos.exception;
 
 import dev.matheuslf.desafio.inscritos.project.*;
 import dev.matheuslf.desafio.inscritos.task.*;
+import dev.matheuslf.desafio.inscritos.user.AccessDeniedException;
 import dev.matheuslf.desafio.inscritos.user.UserEmailDuplicateException;
 import dev.matheuslf.desafio.inscritos.user.UserNameTooShortException;
 import dev.matheuslf.desafio.inscritos.user.UserNotFoundException;
@@ -217,6 +218,21 @@ public class GlobalExceptionHandle {
                 null);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorNameShort);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex){
+
+        log.warn("Usuário não tem acesso para realizar essa função");
+
+        ErrorResponse ErrorAccess = new ErrorResponse(
+                "Usuário não tem permissão",
+                "Você não tem permissão para acessar dados de outro usuário",
+                LocalDateTime.now(),
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorAccess);
     }
 
 
