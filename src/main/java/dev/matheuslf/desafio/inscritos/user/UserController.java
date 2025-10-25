@@ -19,9 +19,9 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final UserAuthorizationServiceRole userAuthorizationService;
+    private final UserAuthorizationRoleService userAuthorizationService;
 
-    public UserController(UserService userService, UserAuthorizationServiceRole userAuthorizationService) {
+    public UserController(UserService userService, UserAuthorizationRoleService userAuthorizationService) {
         this.userService = userService;
         this.userAuthorizationService = userAuthorizationService;
     }

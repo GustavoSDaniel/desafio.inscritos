@@ -30,6 +30,21 @@ public class AuthController {
         this.tokenConfig = tokenConfig;
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<UserRegisterResponse> register(
+            @Valid @RequestBody UserRegisterRequest userRegisterRequest)
+            throws UserNameTooShortException {
+
+        UserRegisterResponse newUser = userService.registerUser(userRegisterRequest);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newUser.id()).toUri();
+
+        return ResponseEntity.created(location).body(newUser);
+
+    }
+
     @PostMapping("/login")
     @Operation(summary = "Fazendo login")
     public ResponseEntity<LoginResponse> login(
@@ -48,20 +63,5 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponse(token));
     }
 
-
-    @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(
-            @Valid @RequestBody UserRegisterRequest userRegisterRequest)
-            throws UserNameTooShortException {
-
-        UserRegisterResponse newUser = userService.registerUser(userRegisterRequest);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newUser.id()).toUri();
-
-        return ResponseEntity.created(location).body(newUser);
-
-    }
 
 }

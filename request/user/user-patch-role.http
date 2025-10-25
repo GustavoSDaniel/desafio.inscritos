@@ -1,8 +1,8 @@
 ### PATCH - Atualizar ROLE do usuário
-PATCH http://localhost:5050/api/v1/users/eea8e0bc-5c77-4db9-8470-a4169df10571/role
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlZWE4ZTBiYy01Yzc3LTRkYjktODQ3MC1hNDE2OWRmMTA1NzEiLCJyb2xlIjoiRU1QTE9ZRUUiLCJzdWIiOiJ0ZXN0ZTJAZXhhbXBsZS5jb20iLCJleHAiOjE3NjEzODQ3MzMsImlhdCI6MTc2MTM0ODczM30.XEj-D3MuwYw0johheilWU6YPIRVk2A4kbUUYi6Jp5bY
+PATCH http://localhost:5050/api/v1/users/ID/role
+Authorization: Bearer <SEU_TOKEN_AQUI>
 Content-Type: application/json
 
 {
-  "role": "EMPLOYEE"
+  "role": "MANAGER, EMPLOYEE"
 }

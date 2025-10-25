@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class UserAuthorizationServiceRole {
+public class UserAuthorizationRoleService {
 
     public void validateRoleUser(UUID userId, Authentication authentication) {
 

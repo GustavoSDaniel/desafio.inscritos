@@ -20,9 +20,11 @@ public class Project {
 
     }
 
-    public Project(String name, String description) {
+    public Project(String name, String description, LocalDateTime endDate, User user) {
         this.name = name;
         this.description = description;
+        this.endDate = endDate;
+        this.user = user;
     }
 
     @Id
