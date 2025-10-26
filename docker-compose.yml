@@ -73,6 +73,25 @@ services:
     depends_on:
       - postgres
 
+  prometheus:
+    image: prom/prometheus:v3.7.2
+    container_name: prometheus
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - project-task-network
+    ports:
+      - 5053:9090
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 5054:3000
+    networks:
+      - project-task-network
+
 networks:
   project-task-network:
     driver: bridge
@@ -81,3 +100,5 @@ networks:
 volumes:
   postgres_data:
   pgadmin_data:
+  prometheus_data:
+  grafana_data:

@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "api-sistema-projetos-demandas-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:5050"]
+      #- targets: ["project-task-app:5050"] Se for usar direto pela aplicação do docker
+        labels:
+          application: "api-sistema-projetos-demandas"
