@@ -27,6 +27,7 @@ public class SecurityConfig {
 
     public static final String[] PUBLIC_WHITELIST = {
             "/api/v1/auth/**",
+            "/actuator/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html",
