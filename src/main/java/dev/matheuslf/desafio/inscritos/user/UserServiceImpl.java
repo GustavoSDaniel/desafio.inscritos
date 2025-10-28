@@ -3,6 +3,7 @@ package dev.matheuslf.desafio.inscritos.user;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@CacheConfig(cacheNames = "users")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -31,6 +33,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(
+            put = @CachePut(key = "#result.id"),
+            evict = {
+                    @CacheEvict(key = "'page-*'", allEntries = true),
+                    @CacheEvict(key = "'search-' + #userRegisterRequest.userName()")
+            }
+    )
     public UserRegisterResponse registerUser(UserRegisterRequest userRegisterRequest)
             throws UserNameTooShortException {
 
@@ -59,6 +68,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(key = "'page-' + #pageable.pageNumber " +
+            "+ '-size-' + #pageable.pageSize " +
+            "+ '-sort-' + #pageable.sort.toString()")
     public Page<UserResponse> getUsers(Pageable pageable) {
 
         Page<User> users = userRepository.findAll(pageable);
@@ -71,6 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(key = "#id")
     public UserResponse findById(UUID id) {
 
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
@@ -81,6 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(key = "'email-' + #email")
     public Optional<UserResponse> findByEmail(String email) {
 
         Optional<User> user = userRepository.findByEmail(email);
@@ -96,6 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(key = "'search-' + #username")
     public List<UserResponse> findByUsername(String username) {
 
         List<User> users = userRepository.searchByUserName(username);
@@ -112,6 +127,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    @Caching(
+            put = @CachePut(key = "#id"),
+            evict = {
+                    @CacheEvict(key = "'page-*'", allEntries = true),
+                    @CacheEvict(key = "'search-*'", allEntries = true),
+                    @CacheEvict(key = "'email-*'", allEntries = true)
+            }
+    )
     public UserResponse updateUser(UUID id, UserRequestUpdate userRequestUpdate) {
 
         User userUpdate = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
@@ -146,6 +169,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    @Caching(
+            put = @CachePut(key = "#id"),
+            evict = {
+                    @CacheEvict(key = "'page-*'", allEntries = true),
+                    @CacheEvict(key = "'search-*'", allEntries = true)
+            }
+    )
     public UserResponse updateUserRole(UUID id, UserRequestUpdateRole userRequestUpdateRole) {
 
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
@@ -168,6 +198,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(key = "#id"),
+            @CacheEvict(key = "'page-*'", allEntries = true),
+            @CacheEvict(key = "'search-*'", allEntries = true),
+            @CacheEvict(key = "'email-*'", allEntries = true)
+    })
     public void deleteUser(UUID id) {
 
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
