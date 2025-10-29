@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    //Arrange (preparação), act (ação), assert
+    //Arrange (preparação), act (ação), assert (Verificação)
 
     @Mock
     private UserRepository userRepository;
@@ -178,7 +178,157 @@ class UserServiceImplTest {
         }
     }
 
+    @Nested
+    class findUserByEmail {
+
+        @Test
+        @DisplayName("Should find user by email with success")
+        void shouldFindUserByEmail() {
+
+            var userEmail = "gustavo@gmail.com";
+
+            var userFound = new User(
+                    "gustavo",
+                    userEmail,
+                    "senha-encodada-fake"
+            );
+
+            var userResponse = new UserResponse(
+                    UUID.randomUUID(),
+                    "gustavo",
+                    "gustavo@gmail.com",
+                    UserRole.MANAGER
+
+            );
+
+            when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(userFound));
+
+            when(userMapper.toUserResponse(userFound)).thenReturn(userResponse);
+
+            var output = userService.findByEmail(userEmail);
+
+            assertNotNull(output);
+            assertTrue(output.isPresent());
+            assertEquals(userResponse, output.get());
+
+            verify(userRepository).findByEmail(userEmail);
+            verify(userMapper).toUserResponse(userFound);
+        }
+    }
+
+    @Nested
+    class findByUsername {
+
+        @Test
+        @DisplayName("Should find user by name with success")
+        void shouldFindUserByUsername() {
+
+            var userName = "gustavo";
+
+            var userFound = new User(
+                    userName,
+                    "gustavo@gmail.com",
+                    "senha-encodada-fake"
+            );
+
+            var userResponse = new UserResponse(
+                    UUID.randomUUID(),
+                    "gustavo",
+                    "gustavo@gmail.com",
+                    UserRole.MANAGER
+
+            );
+
+            List<User> userNames = List.of(userFound);
+
+            when(userRepository.searchByUserName(userName)).thenReturn(userNames);
+
+            when(userMapper.toUserResponse(userFound)).thenReturn(userResponse);
+
+            List<UserResponse> output = userService.findByUsername(userName);
+
+            assertNotNull(output);
+            assertFalse(output.isEmpty());
+
+            verify(userRepository).searchByUserName(userName);
+            verify(userMapper).toUserResponse(userFound);
+        }
+    }
+
+    @Nested
+    class updateUser{
+
+        @Test
+        @DisplayName("Should update user by id with success")
+        void shouldUpdateUser() {
+
+            var userId = UUID.randomUUID();
+
+            var userFound = new User(
+                    "gustavo",
+                    "gustavo@gmail.com",
+                    "senha-encodada-fake"
+            );
+
+            var userUpdate = new UserRequestUpdate(
+
+                    "gustavoUpdate",
+                    "gustavoUpdate@gmail.com",
+                    "senha-encodada-fak-update"
+            );
+
+            var userResponse = new UserResponse(
+                    userId,
+                    "gustavoUpdate",
+                    "gustavoUpdate@gmail.com",
+                    UserRole.EMPLOYEE
+            );
+
+            when(userRepository.findById((userId))).thenReturn(Optional.of(userFound));
+
+            when(userRepository.findByEmail(userUpdate.email())).thenReturn(Optional.empty());
+            when(passwordEncoder.encode(userUpdate.password())).thenReturn(userUpdate.password());
+
+            when(userRepository.save(any(User.class))).thenReturn(userFound);
+
+            when(userMapper.toUserResponse(userFound)).thenReturn(userResponse);
+
+            UserResponse output = userService.updateUser(userId, userUpdate);
+
+            assertNotNull(output);
+            assertEquals(userResponse, output);
 
 
+            verify(userRepository).findById(userId);
+            verify(userRepository).findByEmail(userUpdate.email());
+            verify(passwordEncoder).encode(userUpdate.password());
+            verify(userRepository).save(userFound);
+            verify(userMapper).toUserResponse(userFound);
+
+        }
+    }
+
+    @Nested
+    class deleteUser{
+
+        @Test
+        @DisplayName("Should delete user with success")
+        void shouldDeleteUser() {
+            var userId = UUID.randomUUID();
+
+            var userFound = new User(
+                    "gustavo",
+                    "gustavo@gmail.com",
+                    "senha-encodada-fake"
+            );
+
+            when(userRepository.findById((userId))).thenReturn(Optional.of(userFound));
+
+            userService.deleteUser(userId);
+
+            verify(userRepository).delete(userFound);
+
+        }
+    }
 
 }
