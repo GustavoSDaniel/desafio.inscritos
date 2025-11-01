@@ -98,6 +98,64 @@ class ProjectServiceImplTest {
         }
     }
 
+    @Nested
+    class findProjectById {
+
+        @Test
+        @DisplayName("Should find project by id")
+        void shouldFindProjectById() {
+
+            var projectId = 1L;
+            var endDate = LocalDateTime.parse("2026-12-31T12:30:59");
+
+            var userFound = new User(
+                    "gustavo",
+                    "gustavo@gmail.com",
+                    "senha-encodada-fake"
+            );
+
+            Project projectFound = new Project(
+                    "Projeto para teste",
+                    "Projeto para testar projeto",
+                    endDate,
+                    userFound
+
+            );
+
+            ProjectResponse projectResponse = new ProjectResponse(
+                    1L,
+                    "Projeto para teste",
+                    "Projeto para testar projeto",
+                     endDate,
+                    "gustavo"
+            );
+
+            when(projectRepository.findById((projectId))).thenReturn(Optional.of(projectFound));
+            when(projectMapper.toProjectResponse(projectFound)).thenReturn(projectResponse);
+
+            var output = projectService.getProjectById(projectId);
+
+            assertNotNull(output);
+
+            verify(projectRepository).findById(projectId);
+            verify(projectMapper).toProjectResponse(projectFound);
+
+        }
+    }
+
+    @Nested
+    class findProjectByName {
+
+        @Test
+        @DisplayName("Should find project by name")
+        void shouldFindProjectByName() {
+
+
+
+
+        }
+    }
+
 
     @Nested
     class deleteProject {
