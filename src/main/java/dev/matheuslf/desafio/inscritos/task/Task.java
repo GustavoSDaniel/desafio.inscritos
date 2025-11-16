@@ -3,6 +3,8 @@ package dev.matheuslf.desafio.inscritos.task;
 import dev.matheuslf.desafio.inscritos.project.Project;
 import dev.matheuslf.desafio.inscritos.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,6 +30,16 @@ public class Task {
         this.project = project;
         this.user = user;
     }
+
+    public Task(String title, String description, PriorityTask priority, LocalDateTime dueDate) {
+
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
+
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

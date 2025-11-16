@@ -60,20 +60,16 @@ public class TaskServiceImpl implements TaskService{
         Project project = projectRepository.findById(taskRequest.projectId())
                 .orElseThrow(ProjectNotFoundException::new);
 
-       Task newTask = new Task();
-       newTask.setTitle(taskRequest.title());
-       newTask.setDescription(taskRequest.description());
+       Task newTask = taskMapper.toTask(taskRequest);
        newTask.setStatus(StatusTask.TODO);
-       newTask.setPriority(taskRequest.priority());
-       newTask.setDueDate(taskRequest.dueDate());
        newTask.setUser(user);
        newTask.setProject(project);
 
-       Task salvedTask = taskRepository.save(newTask);
+       Task savedTask = taskRepository.save(newTask);
 
-        log.info("Task do Projeto {} criada com sucesso {}", newTask.getProject(), salvedTask.getTitle());
+        log.info("Task do Projeto {} criada com sucesso {}", newTask.getProject(), savedTask.getTitle());
 
-       return taskMapper.toTaskResponse(salvedTask);
+       return taskMapper.toTaskResponse(savedTask);
     }
 
     @Override

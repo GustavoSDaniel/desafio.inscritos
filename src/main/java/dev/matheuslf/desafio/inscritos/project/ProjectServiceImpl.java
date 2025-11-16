@@ -59,10 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
         User user = userRepository.findById(projectRequest.userId())
                 .orElseThrow(UserNotFoundException::new);
 
-        Project newProject = new Project();
-        newProject.setName(projectRequest.name());
-        newProject.setDescription(projectRequest.description());
-        newProject.setEndDate(projectRequest.endDate());
+        Project newProject = projectMapper.toProject(projectRequest);
         newProject.setUser(user);
 
         Project savedProject = projectRepository.save(newProject);

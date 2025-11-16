@@ -5,6 +5,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskMapper {
 
+    public Task toTask(TaskRequest taskRequest){
+        if (taskRequest == null) return null;
+
+        return new Task(
+
+                taskRequest.title(),
+                taskRequest.description(),
+                taskRequest.priority(),
+                taskRequest.dueDate()
+        );
+    }
+
     public TaskResponse toTaskResponse(Task task) {
 
         if (task == null){
