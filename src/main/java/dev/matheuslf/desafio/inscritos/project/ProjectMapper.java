@@ -5,6 +5,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectMapper {
 
+    public Project toProject(ProjectRequest projectRequest) {
+
+        if (projectRequest == null) return null;
+
+        return new Project(
+                projectRequest.name(),
+                projectRequest.description(),
+                projectRequest.endDate()
+        );
+
+    }
+
     public ProjectResponse toProjectResponse(Project project) {
         if (project == null){
             return null;

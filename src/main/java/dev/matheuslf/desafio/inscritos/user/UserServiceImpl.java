@@ -53,10 +53,7 @@ public class UserServiceImpl implements UserService {
             throw new UserEmailDuplicateException();
         }
 
-        User newUser = new User();
-        newUser.setEmail(userRegisterRequest.email());
-        newUser.setPassword(passwordEncoder.encode(userRegisterRequest.password()));
-        newUser.setUserName(userRegisterRequest.userName());
+        User newUser = userMapper.toUser(userRegisterRequest);
         newUser.setRole(userRole());
 
         User userSalved = userRepository.save(newUser);

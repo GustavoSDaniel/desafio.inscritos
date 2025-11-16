@@ -3,6 +3,8 @@ package dev.matheuslf.desafio.inscritos.project;
 import dev.matheuslf.desafio.inscritos.task.Task;
 import dev.matheuslf.desafio.inscritos.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,6 +27,12 @@ public class Project {
         this.description = description;
         this.endDate = endDate;
         this.user = user;
+    }
+
+    public Project(String name, String description, LocalDateTime endDate) {
+        this.name = name;
+        this.description = description;
+        this.endDate = endDate;
     }
 
     @Id
